@@ -39,8 +39,8 @@ public void OnMapVoteStart()
 	{
 		if (IsClientInGame(i) && !GetUserAdmin(i).HasFlag(Admin_Ban) && !BaseComm_IsClientMuted(i))
 		{
-			CPrintToChat(i, "{green}[VM]{default} You'll be muted until the {darkred}vote ends!");
-			CPrintToChat(i, "{green}[VM]{default} Please, take it easy, and don't speak on the mic yet.");
+			CPrintToChat(i, "{green}[MVM]{default} Fuiste muteado hasta que {darkred}termine la votacion!");
+			CPrintToChat(i, "{green}[MVM]{default} Por favor, {darkred}no hables por microfono {default}mientras tanto!");
 			SetClientListeningFlags(i, VOICE_MUTED);
 		}
 	}
@@ -54,7 +54,7 @@ public void OnMapVoteEnd()
 	{
 		if (IsClientInGame(i) && !GetUserAdmin(i).HasFlag(Admin_Ban) && !BaseComm_IsClientMuted(i))
 		{
-			CPrintToChat(i, "{green}[VM]{default} The vote has ended, you can now {lightblue}speak properly!");
+			CPrintToChat(i, "{green}[MVM]{default} La votación termino, {lightblue}ya podes hablar!");
 			SetClientListeningFlags(i, VOICE_NORMAL);
 		}
 	}
@@ -66,10 +66,10 @@ public Action ShowText(Handle timer)
 	{
 		for (int i = 1; i <= MaxClients; i++)   
 		{    
-			if (IsClientInGame(i))    
+			if (IsClientInGame(i) && !BaseComm_IsClientMuted(i))   
 			{    
 				SetHudTextParams(-1.0, 0.1, 5.0, 0, 255, 255, 255, 0, 0.1, 0.1, 0.1);    
-				ShowHudText(i, 5, "YOU WERE MUTED UNTIL THE VOTE ENDS!");    
+				ShowHudText(i, 5, "TODOS FUERON MUTEADOS HASTA QUE TERMINE LA VOTACION!");    
 			}    
 		}
 	}
