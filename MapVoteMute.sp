@@ -9,9 +9,7 @@
 #include <mapchooser_extended>
 #include <multicolors>
 
-bool b_ShowHudBoolean = false;
-
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 #pragma newdecls required
 
@@ -24,16 +22,10 @@ public Plugin myinfo 	=
 	url					= 		"http://steamcommunity.com/id/nano2k06"
 }
 
-public void OnMapStart()
+public int OnMapVoteStart()
 {
-	b_ShowHudBoolean = false;
-}
-
-public void OnMapVoteStart()
-{
-	CreateTimer(2.5, ShowText, _, TIMER_REPEAT); 
-	
-	b_ShowHudBoolean = true;
+	float timer_duration = GetConVarFloat(FindConVar("mce_voteduration"));
+	CreateTimer(timer_duration, ShowText);
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -46,10 +38,8 @@ public void OnMapVoteStart()
 	}
 }
 
-public void OnMapVoteEnd()
+public int OnMapVoteEnd()
 {
-	b_ShowHudBoolean = false;
-	
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientInGame(i) && !GetUserAdmin(i).HasFlag(Admin_Ban) && !BaseComm_IsClientMuted(i))
@@ -62,20 +52,12 @@ public void OnMapVoteEnd()
 
 public Action ShowText(Handle timer)    
 {
-	if(b_ShowHudBoolean)
-	{
-		for (int i = 1; i <= MaxClients; i++)   
+	for (int i = 1; i <= MaxClients; i++)   
+	{    
+		if (IsClientInGame(i) && !BaseComm_IsClientMuted(i))   
 		{    
-			if (IsClientInGame(i) && !BaseComm_IsClientMuted(i))   
-			{    
-				SetHudTextParams(-1.0, 0.1, 5.0, 0, 255, 255, 255, 0, 0.1, 0.1, 0.1);    
-				ShowHudText(i, 5, "YOU WERE MUTED UNTIL THE VOTE ENDS!");    
-			}    
-		}
+			SetHudTextParams(-1.0, 0.1, 5.0, 0, 255, 255, 255, 0, 0.1, 0.1, 0.1);    
+			ShowHudText(i, 5, "YOU WERE MUTED UNTIL THE VOTE ENDS!");    
+		}    
 	}
-	else
-	{
-		return Plugin_Stop;
-	}
-	return Plugin_Handled;
 }
